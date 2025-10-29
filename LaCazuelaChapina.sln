@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{481E15FA-70D7-4F42-B764-6B52C0C12DA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaCazuelaChapina.API", "src\LaCazuelaChapina.API\LaCazuelaChapina.API.csproj", "{ADEB2EF1-CDE8-476A-814C-A673F4C1EB88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaCazuelaChapina.Domain", "src\LaCazuelaChapina.Domain\LaCazuelaChapina.Domain.csproj", "{CC002F41-D3C2-47CD-8E98-338DE8DC1954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaCazuelaChapina.Application", "src\LaCazuelaChapina.Application\LaCazuelaChapina.Application.csproj", "{23F70CEB-5AED-4BEC-B74C-817C8965BBA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaCazuelaChapina.Infrastructure", "src\LaCazuelaChapina.Infrastructure\LaCazuelaChapina.Infrastructure.csproj", "{AE2825D9-EFA6-4250-B8D5-7D3EB52A7A6C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{99E7E8EC-F2DA-4526-BC2C-29A405ECC098}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaCazuelaChapina.Tests", "tests\LaCazuelaChapina.Tests\LaCazuelaChapina.Tests.csproj", "{8280B8F1-0ECE-49FA-AEC3-347789128AFC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADEB2EF1-CDE8-476A-814C-A673F4C1EB88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADEB2EF1-CDE8-476A-814C-A673F4C1EB88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADEB2EF1-CDE8-476A-814C-A673F4C1EB88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADEB2EF1-CDE8-476A-814C-A673F4C1EB88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC002F41-D3C2-47CD-8E98-338DE8DC1954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC002F41-D3C2-47CD-8E98-338DE8DC1954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC002F41-D3C2-47CD-8E98-338DE8DC1954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC002F41-D3C2-47CD-8E98-338DE8DC1954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23F70CEB-5AED-4BEC-B74C-817C8965BBA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23F70CEB-5AED-4BEC-B74C-817C8965BBA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23F70CEB-5AED-4BEC-B74C-817C8965BBA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23F70CEB-5AED-4BEC-B74C-817C8965BBA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE2825D9-EFA6-4250-B8D5-7D3EB52A7A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE2825D9-EFA6-4250-B8D5-7D3EB52A7A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE2825D9-EFA6-4250-B8D5-7D3EB52A7A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE2825D9-EFA6-4250-B8D5-7D3EB52A7A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8280B8F1-0ECE-49FA-AEC3-347789128AFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8280B8F1-0ECE-49FA-AEC3-347789128AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8280B8F1-0ECE-49FA-AEC3-347789128AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8280B8F1-0ECE-49FA-AEC3-347789128AFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ADEB2EF1-CDE8-476A-814C-A673F4C1EB88} = {481E15FA-70D7-4F42-B764-6B52C0C12DA4}
+		{CC002F41-D3C2-47CD-8E98-338DE8DC1954} = {481E15FA-70D7-4F42-B764-6B52C0C12DA4}
+		{23F70CEB-5AED-4BEC-B74C-817C8965BBA9} = {481E15FA-70D7-4F42-B764-6B52C0C12DA4}
+		{AE2825D9-EFA6-4250-B8D5-7D3EB52A7A6C} = {481E15FA-70D7-4F42-B764-6B52C0C12DA4}
+		{8280B8F1-0ECE-49FA-AEC3-347789128AFC} = {99E7E8EC-F2DA-4526-BC2C-29A405ECC098}
+	EndGlobalSection
+EndGlobal
