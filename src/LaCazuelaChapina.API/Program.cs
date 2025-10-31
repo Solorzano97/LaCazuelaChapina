@@ -175,50 +175,50 @@ using (var scope = app.Services.CreateScope())
         // Verificar conexión
         if (context.Database.CanConnect())
         {
-            Log.Information("✅ Conexión a base de datos establecida correctamente");
+            Log.Information(" Conexión a base de datos establecida correctamente");
             
             // Obtener información de la base de datos
             var dbName = context.Database.GetDbConnection().Database;
-            Log.Information($"📊 Base de datos: {dbName}");
+            Log.Information($" Base de datos: {dbName}");
             
             // Contar registros en tablas principales (si existen datos)
             try
             {
                 var productosCount = context.Productos.Count();
                 var sucursalesCount = context.Sucursales.Count();
-                Log.Information($"📦 Productos: {productosCount}, Sucursales: {sucursalesCount}");
+                Log.Information($" Productos: {productosCount}, Sucursales: {sucursalesCount}");
             }
             catch
             {
-                Log.Warning("⚠️  Las tablas aún no tienen datos o no existen");
+                Log.Warning("  Las tablas aún no tienen datos o no existen");
             }
         }
         else
         {
-            Log.Error("❌ No se pudo conectar a la base de datos");
+            Log.Error(" No se pudo conectar a la base de datos");
         }
     }
     catch (Exception ex)
     {
-        Log.Error(ex, "❌ Error al inicializar la base de datos");
+        Log.Error(ex, " Error al inicializar la base de datos");
     }
 }
 
 // ============================================
 // EJECUTAR APLICACIÓN
 // ============================================
-Log.Information("🚀 Iniciando La Cazuela Chapina API...");
-Log.Information($"🌍 Ambiente: {app.Environment.EnvironmentName}");
-Log.Information($"🔗 Swagger: https://localhost:7001/swagger");
+Log.Information(" Iniciando La Cazuela Chapina API...");
+Log.Information($" Ambiente: {app.Environment.EnvironmentName}");
+Log.Information($"Swagger: https://localhost:7001/swagger");
 
 try
 {
     app.Run();
-    Log.Information("✅ Aplicación finalizada correctamente");
+    Log.Information("Aplicación finalizada correctamente");
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "❌ La aplicación terminó inesperadamente");
+    Log.Fatal(ex, " La aplicación terminó inesperadamente");
 }
 finally
 {
