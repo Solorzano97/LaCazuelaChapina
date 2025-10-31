@@ -38,12 +38,19 @@ public class AuthController : ControllerBase
     {
         try
         {
+            // Validar que el credential no esté vacío
+            if (string.IsNullOrWhiteSpace(request.Credential))
+            {
+                return BadRequest(new { Success = false, Message = "Credential es requerido" });
+            }
+
             // Validar el token de Google
-            var payload = await ValidarTokenGoogle(request.Credential);
+            var (payload, errorMessage) = await ValidarTokenGoogle(request.Credential);
             
             if (payload == null)
             {
-                return Unauthorized(new { Success = false, Message = "Token de Google inválido" });
+                _logger.LogWarning("Token de Google inválido: {Error}", errorMessage);
+                return Unauthorized(new { Success = false, Message = errorMessage ?? "Token de Google inválido" });
             }
 
             // Buscar o crear usuario
@@ -318,22 +325,79 @@ public class AuthController : ControllerBase
     // MÉTODOS AUXILIARES
     // ============================================
 
-    private async Task<GoogleJsonWebSignature.Payload?> ValidarTokenGoogle(string credential)
+    private async Task<(GoogleJsonWebSignature.Payload? payload, string? errorMessage)> ValidarTokenGoogle(string credential)
     {
         try
         {
+            var clientId = _configuration["Google:ClientId"];
+            
+            // Validar que el ClientId esté configurado
+            if (string.IsNullOrWhiteSpace(clientId) || clientId == "TU_CLIENT_ID_DE_GOOGLE_AQUI")
+            {
+                var error = "Google ClientId no está configurado en appsettings.json. Por favor, configure su ClientId de Google OAuth.";
+                _logger.LogError(error);
+                return (null, error);
+            }
+
+            // Validar formato básico del token
+            if (string.IsNullOrWhiteSpace(credential) || credential.Length < 100)
+            {
+                var error = "El token de Google tiene un formato inválido o está vacío";
+                _logger.LogWarning(error);
+                return (null, error);
+            }
+
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = new[] { _configuration["Google:ClientId"] }
+                Audience = new[] { clientId }
             };
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(credential, settings);
-            return payload;
+            
+            if (payload == null)
+            {
+                _logger.LogWarning("El payload de Google es null después de la validación");
+                return (null, "Token de Google inválido: el payload no pudo ser validado");
+            }
+
+            // Validar que el payload tenga el email requerido
+            if (string.IsNullOrWhiteSpace(payload.Email))
+            {
+                var error = "El token de Google no contiene un email válido";
+                _logger.LogWarning(error);
+                return (null, error);
+            }
+
+            _logger.LogInformation("Token de Google validado exitosamente para email: {Email}", payload.Email);
+            return (payload, null);
+        }
+        catch (InvalidJwtException ex)
+        {
+            var errorMessage = $"Token JWT inválido: {ex.Message}";
+            _logger.LogError(ex, "Token JWT inválido de Google. Error: {Message}", ex.Message);
+            
+            // Mensajes más descriptivos según el tipo de error
+            if (ex.Message.Contains("audience") || ex.Message.Contains("Audience"))
+            {
+                errorMessage = $"El ClientId configurado no coincide con el token. Verifique que el ClientId en appsettings.json sea correcto. Error: {ex.Message}";
+            }
+            else if (ex.Message.Contains("expired") || ex.Message.Contains("Expired"))
+            {
+                errorMessage = "El token de Google ha expirado. Por favor, intente iniciar sesión nuevamente.";
+            }
+            else if (ex.Message.Contains("signature") || ex.Message.Contains("Signature"))
+            {
+                errorMessage = "La firma del token de Google es inválida. Verifique que esté usando el token correcto.";
+            }
+            
+            return (null, errorMessage);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error validando token de Google");
-            return null;
+            var errorMessage = $"Error inesperado al validar el token: {ex.Message}";
+            _logger.LogError(ex, "Error validando token de Google. Tipo: {Type}, Mensaje: {Message}, StackTrace: {StackTrace}", 
+                ex.GetType().Name, ex.Message, ex.StackTrace);
+            return (null, errorMessage);
         }
     }
 
