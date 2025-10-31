@@ -1,5 +1,7 @@
 using LaCazuelaChapina.Infrastructure.Data;
 using LaCazuelaChapina.Infrastructure.Services;
+using LaCazuelaChapina.API.Middleware;
+using LaCazuelaChapina.API.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -21,7 +23,11 @@ builder.Host.UseSerilog();
 // ============================================
 // CONFIGURACIÓN DE BASE DE DATOS
 // ============================================
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Priorizar variables de entorno para información sensible
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string no configurada");
+
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
 builder.Services.AddDbContext<CazuelaChapinaContext>(options =>
@@ -45,14 +51,29 @@ builder.Services.AddControllers()
 // ============================================
 // CONFIGURACIÓN DE CORS
 // ============================================
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
+    ?? new[] { "http://localhost:3000", "http://localhost:5173" };
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // Necesario para cookies y auth headers
     });
+    
+    // Mantener AllowAll solo para desarrollo
+    if (builder.Environment.IsDevelopment())
+    {
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+    }
 });
 
 // ============================================
@@ -77,6 +98,9 @@ builder.Services.AddSwaggerGen(c =>
 // ============================================
 // CONFIGURACIÓN DE SERVICIOS
 // ============================================
+
+// Registrar repositorios genéricos
+builder.Services.AddScoped(typeof(LaCazuelaChapina.Application.Interfaces.IGenericRepository<>), typeof(LaCazuelaChapina.Infrastructure.Repositories.GenericRepository<>));
 
 // Servicio REAL de OpenRouter (requiere API Key)
 builder.Services.AddHttpClient<IOpenRouterService, OpenRouterService>();
@@ -115,7 +139,11 @@ else
 app.UseHttpsRedirection();
 
 // CORS
-app.UseCors("AllowAll");
+var corsPolicy = app.Environment.IsDevelopment() ? "AllowAll" : "AllowSpecificOrigins";
+app.UseCors(corsPolicy);
+
+// Manejo global de excepciones (debe ir antes de otros middlewares)
+app.UseMiddleware<GlobalExceptionHandler>();
 
 // Logging de requests
 app.UseSerilogRequestLogging();

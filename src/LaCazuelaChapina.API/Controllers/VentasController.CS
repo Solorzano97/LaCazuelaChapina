@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using LaCazuelaChapina.Infrastructure.Data;
 using LaCazuelaChapina.Domain.Entities;
 using LaCazuelaChapina.Domain.Enums;
+using LaCazuelaChapina.API.Common;
+using LaCazuelaChapina.API.DTOs.Requests;
 
 namespace LaCazuelaChapina.API.Controllers;
 
@@ -231,7 +233,7 @@ public class VentasController : ControllerBase
     /// Actualiza el estado de una venta
     /// </summary>
     [HttpPatch("{id}/estado")]
-    public async Task<ActionResult> ActualizarEstado(int id, [FromBody] ActualizarEstadoRequest request)
+    public async Task<ActionResult> ActualizarEstado(int id, [FromBody] ActualizarEstadoVentaRequest request)
     {
         try
         {
@@ -357,28 +359,4 @@ public class VentasController : ControllerBase
     }
 }
 
-// ============================================
-// DTOs para Requests
-// ============================================
-
-public class CrearVentaRequest
-{
-    public int SucursalId { get; set; }
-    public int UsuarioId { get; set; }
-    public decimal Descuento { get; set; } = 0;
-    public bool Sincronizada { get; set; } = true;
-    public List<VentaDetalleRequest> Detalles { get; set; } = new();
-}
-
-public class VentaDetalleRequest
-{
-    public int? ProductoId { get; set; }
-    public int? ComboId { get; set; }
-    public int Cantidad { get; set; }
-    public string? ConfiguracionJson { get; set; }
-}
-
-public class ActualizarEstadoRequest
-{
-    public EstadoVenta Estado { get; set; }
-}
+// DTOs movidos a: src/LaCazuelaChapina.API/DTOs/Requests/

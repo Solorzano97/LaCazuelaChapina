@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LaCazuelaChapina.Domain\LaCazuelaChapina.Domain.csproj" />
+    <ProjectReference Include="..\LaCazuelaChapina.Application\LaCazuelaChapina.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
