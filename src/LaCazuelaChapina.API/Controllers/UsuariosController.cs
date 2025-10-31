@@ -390,48 +390,6 @@ public class UsuariosController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Login de usuario (autenticación simple)
-    /// </summary>
-    [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] LoginRequest request)
-    {
-        try
-        {
-            var usuario = await _context.Usuarios
-                .Include(u => u.Sucursal)
-                .FirstOrDefaultAsync(u => u.Email == request.Email && u.Activo);
-
-            if (usuario == null)
-                return Unauthorized(new { Success = false, Message = "Credenciales inválidas" });
-
-            // Verificar password
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, usuario.PasswordHash))
-                return Unauthorized(new { Success = false, Message = "Credenciales inválidas" });
-
-            _logger.LogInformation("Usuario autenticado: {Email}", usuario.Email);
-
-            return Ok(new
-            {
-                Success = true,
-                Data = new
-                {
-                    usuario.Id,
-                    usuario.Nombre,
-                    usuario.Email,
-                    usuario.Rol,
-                    usuario.SucursalId,
-                    Sucursal = usuario.Sucursal.Nombre
-                },
-                Message = "Login exitoso"
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error en login");
-            return StatusCode(500, new { Success = false, Message = "Error en login", Error = ex.Message });
-        }
-    }
 }
 
 // ============================================
@@ -460,10 +418,4 @@ public class ActualizarUsuarioRequest
 public class CambiarEstadoUsuarioRequest
 {
     public bool Activo { get; set; }
-}
-
-public class LoginRequest
-{
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }
