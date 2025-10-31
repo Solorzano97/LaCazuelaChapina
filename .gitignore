@@ -51,5 +51,8 @@ logs/
 appsettings.Development.json
 appsettings.Local.json
 
+# Configuración sensible - NO subir al repositorio
+src/LaCazuelaChapina.API/appsettings.json
+
 # macOS
 .DS_Store

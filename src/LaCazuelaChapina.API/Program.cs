@@ -78,13 +78,12 @@ builder.Services.AddSwaggerGen(c =>
 // CONFIGURACIÓN DE SERVICIOS
 // ============================================
 
-// OPCIÓN 1: Servicio REAL de OpenRouter (requiere API Key)
-// Descomentar cuando tengas API Key válida
-// builder.Services.AddHttpClient<IOpenRouterService, OpenRouterService>();
+// Servicio REAL de OpenRouter (requiere API Key)
+builder.Services.AddHttpClient<IOpenRouterService, OpenRouterService>();
 
-// OPCIÓN 2: Servicio SIMULADO (no requiere API Key) - TEMPORAL
-// Comentar esta línea cuando tengas API Key real
-builder.Services.AddScoped<IOpenRouterService, MockOpenRouterService>();
+// OPCIÓN 2: Servicio SIMULADO (solo para desarrollo/testing)
+// Descomentar si necesitas usar el mock temporalmente
+// builder.Services.AddScoped<IOpenRouterService, MockOpenRouterService>();
 
 // ============================================
 // CONSTRUCCIÓN DE LA APLICACIÓN
